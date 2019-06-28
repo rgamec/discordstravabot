@@ -5,6 +5,7 @@ import os
 import sys
 import discord
 import requests
+import json
 
 # Grab the Discord bot token from DISCORDTOKEN environment variable
 DISCORDTOKEN = os.environ.get('DISCORDTOKEN')
@@ -30,6 +31,11 @@ STRAVACLUB = "531232"
 stravaAuthHeader = {'Content-Type': 'application/json',
                     'Authorization': 'Bearer {}'.format(STRAVATOKEN)}
 
+# Header used for requests to Strava's open/public APIs
+stravaPublicHeader = {'Host': 'www.strava.com ',
+                      'Accept': 'text/javascript,application/javascript ',
+                      'Referer': 'https://www.strava.com/clubs/' + STRAVACLUB,
+                      'X-Requested-With': 'XMLHttpRequest'}
 
 class StravaIntegration(discord.Client):
 
@@ -49,17 +55,36 @@ class StravaIntegration(discord.Client):
             stravaResult = requests.get('https://www.strava.com/api/v3/clubs/' +
                                         STRAVACLUB+'/activities',
                                         headers=stravaAuthHeader)
-            #print(stravaResult.json())
+
             totalDistance = 0
             totalDistanceThisWeek = 0
 
             for activity in stravaResult.json():
                 totalDistance += activity['distance']
+
             statisticsMsg = 'Together we have run ' + \
                             str(round(totalDistance/1000, 2)) + \
-                            ' km! That\'s like...really far dude.'
+                            ' km! That\'s really far!'
 
             await message.channel.send(statisticsMsg)
+
+        if message.content == '!leaderboard':
+            leaderboardMsg = 'Leaderboard:\n'
+           
+            publicLeaderboard = requests.get('https://www.strava.com/clubs/' +
+                                             STRAVACLUB + '/leaderboard',
+                                             headers=stravaPublicHeader)
+
+            leaderboardJSON = json.loads(publicLeaderboard.content)
+
+            for rankedUser in leaderboardJSON['data']:
+                leaderboardMsg +=   str(rankedUser['rank']) + '. ' + \
+                                    rankedUser['athlete_firstname'] + ' ' + \
+                                    rankedUser['athlete_lastname'] + ' (' + \
+                                    str(round(rankedUser['distance']/1000, 2)) + \
+                                    'km)\n'
+
+            await message.channel.send(leaderboardMsg)
 
 
 client = StravaIntegration()

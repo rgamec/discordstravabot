@@ -24,8 +24,13 @@ if STRAVATOKEN is None:
 else:
     print("Strava token is", STRAVATOKEN)
 
-# Set Strava Club ID
-STRAVACLUB = "531232"
+# Grab the Strava Club ID from STRAVACLUB environment variable
+STRAVACLUB = os.environ.get('STRAVACLUB')
+if STRAVACLUB is None:
+    print("STRAVACLUB variable not set. Unable to launch bot.")
+    sys.exit()
+else:
+    print("Strava club is", STRAVACLUB)
 
 # Building Strava authentication header
 stravaAuthHeader = {'Content-Type': 'application/json',
@@ -57,7 +62,7 @@ class StravaIntegration(discord.Client):
                                         headers=stravaAuthHeader)
 
             totalDistance = 0
-            totalDistanceThisWeek = 0
+            # TODO: totalDistanceThisWeek = 0
 
             for activity in stravaResult.json():
                 totalDistance += activity['distance']

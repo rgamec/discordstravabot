@@ -7,7 +7,7 @@ Sign up for Strava API access, then fill in the `DISCORDTOKEN`, `STRAVATOKEN`, a
 ### Commands Supported
 Currently `!leaderboard` (per week) and `!statistics` are implemented.
 
-![DiscordStravaBot Screenshot](https://raw.githubusercontent.com/rgamec/discordstravabot/master/screenshot.jpg)
+![DiscordStravaBot Screenshot](https://raw.githubusercontent.com/rgamec/discordstravabot/master/screenshot.png)
 
 ## Todo
 * Authenticate against the Discord API [DONE]

@@ -6,6 +6,7 @@ import sys
 import discord
 import requests
 import json
+import humanfriendly
 
 # Grab the Discord bot token from DISCORDTOKEN environment variable
 DISCORDTOKEN = os.environ.get('DISCORDTOKEN')
@@ -50,26 +51,36 @@ class StravaIntegration(discord.Client):
 
     async def on_message(self, message):
         ''' Primary inbound message parsing function '''
-        print('Message:', message.content)
+        # print('Message:', message.content)
         if message.author == self.user:
             return
 
         if message.content == '!statistics':
-            print("Running Strava API call../")
-
+            # Fetching overall statistics via authenticated API
             stravaResult = requests.get('https://www.strava.com/api/v3/clubs/' +
                                         STRAVACLUB+'/activities',
                                         headers=stravaAuthHeader)
 
             totalDistance = 0
-            # TODO: totalDistanceThisWeek = 0
+            totalElevationGain = 0
+            totalMovingTime = 0
+            totalActivitiesRecorded = len(stravaResult.json())
 
             for activity in stravaResult.json():
                 totalDistance += activity['distance']
+                totalElevationGain += activity['total_elevation_gain']
+                totalMovingTime += activity['moving_time']
+
+            humanMovingTime = humanfriendly.format_timespan(totalMovingTime)
 
             statisticsMsg = 'Together we have run ' + \
-                            str(round(totalDistance/1000, 2)) + \
-                            ' km! That\'s really far!'
+                             str(round(totalDistance/1000, 2)) + \
+                             ' km over ' + str(totalActivitiesRecorded) + ' activities. '
+            statisticsMsg += 'Our total elevation gain is ' + \
+                              str(round(totalElevationGain,2)) + 'm. '
+            statisticsMsg += 'Our total time spent moving is ' + \
+                              humanMovingTime + '. '
+
 
             await message.channel.send(statisticsMsg)
 

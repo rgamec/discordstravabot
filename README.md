@@ -10,9 +10,9 @@ Currently `!leaderboard` (per week) and `!statistics` are implemented.
 ![DiscordStravaBot Screenshot](https://raw.githubusercontent.com/rgamec/discordstravabot/master/screenshot.png)
 
 ## Todo
-[x] Authenticate against the Discord API
-[x] Authenticate against the Strava API
-[x] Add a `!leaderboard` command to show the top five users (by distance, for the current week)
-[x] Add a `!statistics` command to show the total distance covered by the group
-[x] Add a launcher script
-[ ] Near real-time updates whenever a new activity is uploaded to the Strava group
+- [x] Authenticate against the Discord API
+- [x] Authenticate against the Strava API
+- [x] Add a `!leaderboard` command to show the top five users (by distance, for the current week)
+- [x] Add a `!statistics` command to show the total distance covered by the group
+- [x] Add a launcher script
+- [ ] Near real-time updates whenever a new activity is uploaded to the Strava group

@@ -66,6 +66,9 @@ class StravaIntegration(discord.Client):
             totalMovingTime = 0
             totalActivitiesRecorded = len(stravaResult.json())
 
+            print("Results in dataset: ", totalActivitiesRecorded)
+            print(stravaResult.json())
+
             for activity in stravaResult.json():
                 totalDistance += activity['distance']
                 totalElevationGain += activity['total_elevation_gain']
